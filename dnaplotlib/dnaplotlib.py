@@ -2307,11 +2307,18 @@ class DNARenderer:
                 part_opts = None
                 if 'opts' in list(part.keys()):
                     part_opts = part['opts']
+                # correct the start end
+                if part['fwd'] == True:
+                	start = part['start']
+                	end = part['end']
+                else:
+                	start = part['end']
+                	end = part['start']
                 # Use the correct renderer
                 if 'renderer' in list(part.keys()):
                     # Use custom renderer
                     prev_start, prev_end = part['renderer'](ax, part['type'], part_num, 
-                                     part['start'], part['end'], prev_end,
+                                     start, end, prev_end,
                                      self.scale, self.linewidth, 
                                      opts=part_opts)
 
@@ -2327,17 +2334,17 @@ class DNARenderer:
                     if part['type'] in list(part_renderers.keys()):
                         prev_start, prev_end = part_renderers[part['type']](ax, 
                                        part['type'], part_num, 
-                                       part['start'], part['end'], 
+                                       start, end, 
                                        prev_end, self.scale, 
                                        self.linewidth, opts=part_opts)
                         
                         #update start,end for regulation (THIS CAUSES ISSUES WITH DIRECTION)
-                        if part['fwd'] == True:
-                            part['start'] = prev_start
-                            part['end'] = prev_end
-                        else:
-                            part['start'] = prev_end
-                            part['end'] = prev_start
+                       #  if part['fwd'] == True:
+#                             part['start'] = prev_start
+#                             part['end'] = prev_end
+#                         else:
+#                             part['start'] = prev_end
+#                             part['end'] = prev_start
                         
                         if first_part == True:
                             first_start = prev_start
